@@ -1,7 +1,16 @@
-function moveElement(elementName) {
-
-    var selectedElement = document.getElementById(elementName);
-    var parentElement = selectedElement.parentNode.id;
+function moveElement(elementName, elementTag) {
+    var parentElement = '',
+        selectedElement = '';
+    if (typeof elementTag === 'undefined' || elementTag === "id") {
+        elementTag = "id";
+        selectedElement = document.getElementById(elementName);
+        selectedElement.draggable = false;
+        parentElement = selectedElement.parentNode.id;
+    } else {
+        selectedElement = document.getElementsByClassName(elementName);
+        parentElement = selectedElement[0].parentNode.id;
+        console.log("Class");
+    }
 
     //add events to selected element
     selectedElement.onmousedown = function (e) {
@@ -55,3 +64,4 @@ function moveElement(elementName) {
 }
 
 moveElement("square");
+moveElement("circle");
