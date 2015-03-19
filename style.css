@@ -1,0 +1,9 @@
+.square{
+    position: absolute;
+    height: 250px;
+    width: 250px;
+    background-color: blueviolet;
+    border-radius: 50%;
+    margin: 0;
+    padding: 0;
+}
