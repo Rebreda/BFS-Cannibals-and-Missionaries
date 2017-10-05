@@ -1,24 +1,3 @@
-/* Breadth-First-Search(Graph, Root, Goal):
-    
-    create empty set Checked
-    create empty queue Queue      
-
-    add Root to Checked
-    Queue.enqueue(Root)                      
-
-    while Queue is not empty {
-        Current = Queue.dequeue()
-        if Current.has(Goal) {
-            return Current
-        }
-        for each Node that is adjacent to Current {
-            if Node is not in Checked {
-                Checked.add(Node)
-                Queue.enqueue(Node)
-            }
-        }
-    } */
-
 //the node that holds state/action data
 function Node(state, parent, children, depth) {
     this.state = state;
@@ -60,7 +39,7 @@ function genNode(par, arr, queue) {
                     temp = new Node([arr[0] - i, arr[1] - x, 1],par,[],par.depth + 1);
                     m = temp.state[0];
                     c = temp.state[1];
-                    if (m >= 0 && c >= 0 && m < MAX + 1 && c < MAX + 1) {
+                    if (m >= 0 && c >= 0 && m < MAX + 1 && c < MAX + 1 ) {
                         par.children.push(temp);
                         queue.push(temp);
                     }
@@ -68,7 +47,7 @@ function genNode(par, arr, queue) {
                     temp = new Node([arr[0] + i, arr[1] + x, -1],par,[],par.depth + 1);
                     m = temp.state[0];
                     c = temp.state[1];
-                    if (m >= 0 && c >= 0 && m < MAX + 1 && c < MAX + 1) {
+                    if (m >= 0 && c >= 0 && m < MAX + 1 && c < MAX + 1 ) { //make sure its a reasonable value
                         par.children.push(temp);
                         queue.push(temp);
                     }
@@ -91,91 +70,48 @@ function isValid(arr) {
 MAX = 3;
 var node = {};
 
-
 function bfs(root, goal) {
     let checked = [];
     let queue = [];
     let curr = [];
-    let last = null;
-    let combo = [];
-    
-    // used for visualization not algorith
-    var treeMaker = [{
-        container: "#tree-simple",
-        stackChildren: true
-    }];
-    var big = [];
-    var xla = 0;
-    var x2 = {};
-     //END used for visualization, not the algroithm.
-    
-    queue.push(root); //init search
+    let aq='';
+    queue.push(root);
+     
     while (queue.length !== 0) {
-        curr = queue.shift(); //frontier node
-        
-        // used for visualization not algorithm {
-        if (compareArr(curr.state, root.state) && treeMaker.length == 1) {
-            node = {
-                text: {
-                    name: "island: " + root.state.toString(),
-                    title: 'main land: 0,0',
-                }
-            };
-            var last2 = node;
-            treeMaker.push(node);
-        }
-        // } END used for visualization not algorithm END
-        
-        if (compareArr(curr.state, goal)) { //check if goal
+        curr = queue.shift();
+
+        if (compareArr(curr.state, goal)) {
             console.log("found", curr);
+
             while (true) {
-                if (curr.parent) { 
-                    big.push(curr); //create solution tree 
-                    console.log(curr.state);
+                if (curr.parent) {
+                    aq = (curr.parent.state[0] - curr.state[0]) + "M " + (curr.parent.state[1] - curr.state[1] + "C, ");
+
+                    console.log("Main Land: ", curr.state.toString(), " Island: " ,(MAX - curr.state[0]) + "," + (MAX - curr.state[1]));
+                    $('<p>', {
+                        class: 'listObjectShow',
+                    }).text("Main Land: " + curr.state.toString()+ " | Island: " +(MAX - curr.state[0]) + "," + (MAX - curr.state[1]) + " | MOVE " + aq).appendTo('body');
+                    
+
                     curr = curr.parent;
                 } else {
-                    console.log(root.state);
+                    $('<h1>', {
+                      class: 'listObjectShow',
+                    }).text("Main Land: " + curr.state.toString()+ " | Island: " +(MAX - root.state[0]) + "," + (MAX - root.state[1])).appendTo('body');
+
+                    console.log("Main Land: ", curr.state.toString(), " Island: " ,(MAX - root.state[0]) + "," + (MAX - root.state[1]));
                     break;
                 }
             }
             
-            // used for visualization not algorithm {
-            big = big.reverse(); 
-            for (var prop in big) {
-                x2 = {
-                    parent: last2,
-                    text: {
-                        name: "island: " + big[prop].state.toString(),
-                        title: "main land: " + (3 - big[prop].state[0]) + "," + (3 - big[prop].state[1]),
-                    }
-                };
-                treeMaker.push(x2);
-                combo.push(big[prop].state);
-                if (big[prop].children) {
-                    let y = big[prop].children;
-                    for (var x in y) {
-                        if (searchArr(combo, y[x].state) > 0)
-                            continue;
-                        y2 = {
-                            parent: x2,
-                            text: {
-                                name: "island: " + y[x].state.toString(),
-                                title: "main land: " + (3 - y[x].state[0]) + "," + (3 - y[x].state[1]),
-                            }
-                        };
-                        treeMaker.push(y2);
-                    }
-                }
-                last2 = x2;
-            }
-            var chart = new Treant(treeMaker,function() {}  ,$);
-            // } END used for visualization not algorithm END
-            return curr; //end bfs
+
+            return curr;
         }
 
-        if (searchArr(checked, curr.state) < 0) { //if this state hasnt been checked before, add it to seen checked list 
+        if (searchArr(checked, curr.state) < 0) {
+            //not checked + valid
             checked.push(curr.state);
-            if (isValid(curr.state)) { //if valid node, then generate children. 
+            if (isValid(curr.state)) {
                 genNode(curr, curr.state, queue);
             }
         }
@@ -188,12 +124,9 @@ var rootNode = new Node([MAX, MAX, -1],null,[],1);
 //call the search
 bfs(rootNode, [0, 0, 1]);
 
-
-// used for visualization not algorithm
-$("#numb").on("change keypress", function() {
+$("#numb").on("change", function() {
     MAX = $("#numb").val();
     var asd = new Node([MAX, MAX, -1],null,[],1);
-    console.log('asd', asd);
+    console.log('asd', MAX);
     bfs( asd, [0, 0, 1]);
 });
-// used for visualization not algorithm

@@ -5,17 +5,15 @@
     <meta charset="utf-8">
     <title>moveablejs example</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-    <script src="Treant.js"></script>
-    
-        <link rel="stylesheet" href="Treant.css">
-
 </head>
 
 <body>
-  <label> How many C/M? </label>
-  <input id = "numb" type="text" >
+  <p> Legend: main land is represented by (M, C, Boat on Island Side) = (3, 3, -1 ), island = (M, C)</p>
+  <p> A negative move (i.e. -1C) means to take from main land to the island </p>
+
+  <label> How many C/M?: </label>
+  <input id = "numb" type="text" placeholder="Enter a number if pairs of C and M">
   
   
     <div id="tree-simple" style="width:100%; height: 90%"> </div>
@@ -28,10 +26,11 @@
       display: inline-block;
       width: 20%;
       min-width: 200px;
-      margin: 0 auto;
+      margin-left: 20px;
       padding: 5px;
       border: 1px solid grey;
     }
+    
     .xxxxx {
       margin-bottom: 20px;
     }
